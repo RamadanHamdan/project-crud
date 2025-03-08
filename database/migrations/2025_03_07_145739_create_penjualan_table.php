@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->bigInteger('jumlah');
             $table->foreignId('customer_id')->constrained('customer', 'id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('faktur_id')->constrained('faktur', 'id')->cascadeOnUpdate();
+            $table->foreignId('faktur_id')->constrained('faktur', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->boolean('status')->default(0);
             $table->text('keterangan')->nullable();
             $table->timestamps();

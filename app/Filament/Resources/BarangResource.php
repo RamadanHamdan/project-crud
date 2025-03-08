@@ -22,13 +22,13 @@ class BarangResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
 
-    protected static ?string $navigationLabel = 'Kelola Barang';
+    protected static ?string $navigationLabel = 'Barang';
 
-    protected static ?string $navigationGroup = 'Barang';
+    protected static ?string $navigationGroup = 'Kelola';
+
+    public static ?string $label = 'Barang';
 
     protected static ?string $slug = 'kelola-barang';
-
-    protected static ?string $label = 'Kelola Barang';
 
     public static function form(Form $form): Form
     {
@@ -63,7 +63,8 @@ class BarangResource extends Resource
                 ->copyable()
                 ->label('Kode Barang'),
                 TextColumn::make('harga_barang')
-                ->label('Harga'),            
+                ->label('Harga')
+                ->formatStateUsing(fn (Barang $record): string => 'Rp ' . number_format($record->harga_barang, 0, '.', '.')),            
             ])
             ->filters([
                 //

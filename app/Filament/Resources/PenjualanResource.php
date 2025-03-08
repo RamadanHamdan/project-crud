@@ -9,11 +9,12 @@ use App\Models\Penjualan;
 use Filament\Tables\Table;
 use App\Models\PenjualanModel;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PenjualanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PenjualanResource\RelationManagers;
-use Filament\Tables\Columns\TextColumn;
 
 class PenjualanResource extends Resource
 {
@@ -62,7 +63,22 @@ class PenjualanResource extends Resource
                 ->label('Status')
                 ->sortable()
                 ->searchable()
-                ->badge(),
+                ->badge()
+                ->color(fn(string $state): string => match ($state){
+                    '0' => 'danger',
+                    '1' => 'info',
+                })
+                ->formatStateUsing(fn (PenjualanModel $record): string => $record->status == 0 ? 'Belum Lunas' : 'Lunas'),
+            ])
+            ->emptyStateHeading('Tidak ada data laporan')
+            ->emptyStateDescription('Silahkan tambahkan faktur terlebih dahulu')
+            ->emptyStateIcon('heroicon-o-presentation-chart-bar')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Buat Faktur')
+                    ->url(route('filament.admin.resources.fakturs.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
             ])
             ->filters([
                 //
@@ -70,6 +86,7 @@ class PenjualanResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

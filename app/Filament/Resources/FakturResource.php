@@ -35,6 +35,10 @@ class FakturResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Faktur';
+
+    public static ?string $label = 'Faktur';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -220,10 +224,14 @@ class FakturResource extends Resource
                 TextColumn::make('kode_customer'),
                 TextColumn::make('customer.nama_customer'),
                 TextColumn::make('ket_faktur'),
-                TextColumn::make('total'),
-                TextColumn::make('nominal_charge'),
-                TextColumn::make('charge'),
-                TextColumn::make('total_final'),
+                TextColumn::make('total')
+                ->formatStateUsing(fn (FakturModel $record): string => 'Rp ' . number_format($record->total, 0, '.', '.')),
+                TextColumn::make('nominal_charge')
+                ->formatStateUsing(fn (FakturModel $record): string => 'Rp ' . number_format($record->nominal_charge, 0, '.', '.')),
+                TextColumn::make('charge')
+                ->formatStateUsing(fn (FakturModel $record): string => 'Rp ' . number_format($record->charge, 0, '.', '.')),
+                TextColumn::make('total_final')
+                ->formatStateUsing(fn (FakturModel $record): string => 'Rp ' . number_format($record->total_final, 0, '.', '.')),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
