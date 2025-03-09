@@ -15,6 +15,11 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BarangResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BarangResource\RelationManagers;
+use Faker\Core\File;
+use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Columns\ImageColumn;
+use Laravel\Pail\Files;
+use Psy\Readline\Hoa\FileRead;
 
 class BarangResource extends Resource
 {
@@ -34,7 +39,24 @@ class BarangResource extends Resource
     {
         return $form
             ->schema([
+                FileUpload::make('gambar_barang')
+                    ->required()
+                    ->label('Gambar Barang')
+                    ->imagePreviewHeight('250')
+                    ->loadingIndicatorPosition('left')
+                    ->panelAspectRatio('2:1')
+                    ->panelLayout('integrated')
+                    ->removeUploadedFileButtonPosition('right')
+                    ->uploadButtonPosition('left')
+                    ->uploadProgressIndicatorPosition('left')
+                    ->placeholder('Masukan Gambar...'),
                 TextInput::make('nama_barang')
+                    ->columnSpan([
+                        'default' => 2,
+                        'lg' => 1,
+                        'md' => 1,
+                        'xl' => 1,
+                    ])
                     ->required()
                     ->label('Nama Barang')
                     ->placeholder('Masukan Nama...'),
@@ -45,7 +67,7 @@ class BarangResource extends Resource
                 TextInput::make('harga_barang')->numeric()
                     ->required()
                     ->label('Harga Barang')
-                    ->placeholder('Masukan Harga...')                
+                    ->placeholder('Masukan Harga...')
             ]);
     }
 
@@ -53,18 +75,20 @@ class BarangResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('gambar_barang')
+                    ->label('Gambar Barang'),
                 TextColumn::make('nama_barang')
-                ->sortable()
-                ->copyable()
-                ->copyMessage('Name Copied')
-                ->searchable()
-                ->label('Nama Barang'),
+                    ->sortable()
+                    ->copyable()
+                    ->copyMessage('Name Copied')
+                    ->searchable()
+                    ->label('Nama Barang'),
                 TextColumn::make('kode_barang')
-                ->copyable()
-                ->label('Kode Barang'),
+                    ->copyable()
+                    ->label('Kode Barang'),
                 TextColumn::make('harga_barang')
-                ->label('Harga')
-                ->formatStateUsing(fn (Barang $record): string => 'Rp ' . number_format($record->harga_barang, 0, '.', '.')),            
+                    ->label('Harga')
+                    ->formatStateUsing(fn(Barang $record): string => 'Rp ' . number_format($record->harga_barang, 0, '.', '.')),
             ])
             ->filters([
                 //

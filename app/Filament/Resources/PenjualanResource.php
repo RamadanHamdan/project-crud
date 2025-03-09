@@ -7,6 +7,7 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use App\Models\Penjualan;
 use Filament\Tables\Table;
+use App\Models\FakturModel;
 use App\Models\PenjualanModel;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PenjualanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PenjualanResource\RelationManagers;
+use Filament\Tables\Columns\ImageColumn;
 
 class PenjualanResource extends Resource
 {
@@ -47,6 +49,8 @@ class PenjualanResource extends Resource
                 ->sortable()
                 ->searchable()
                 ->date('d F Y'),
+                ImageColumn::make('gambar_barang')
+                ->defaultImageUrl(url('storage/{gambar_barang}')),
                 TextColumn::make('kode')
                 ->label('Kode Faktur')
                 ->sortable()
@@ -54,7 +58,8 @@ class PenjualanResource extends Resource
                 TextColumn::make('jumlah')
                 ->label('Jumlah')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->formatStateUsing(fn (PenjualanModel $record): string => 'Rp ' . number_format($record->jumlah, 0, '.', '.')),
                 TextColumn::make('customer.nama_customer')
                 ->label('Nama Customer')
                 ->sortable()

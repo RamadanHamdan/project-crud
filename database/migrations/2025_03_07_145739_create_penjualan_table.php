@@ -18,6 +18,8 @@ return new class extends Migration
             $table->bigInteger('jumlah');
             $table->foreignId('customer_id')->constrained('customer', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('faktur_id')->constrained('faktur', 'id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('barang_id')->constrained('barang', 'id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('gambar_barang')->nullable();
             $table->boolean('status')->default(0);
             $table->text('keterangan')->nullable();
             $table->timestamps();
